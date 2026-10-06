@@ -1,0 +1,40 @@
+<section class="assistant" aria-label="AI assistant">
+  <aside class="sidebar" *ngIf="showSidebar" aria-label="Conversation navigation">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z"/></svg></span><span>{{ title }}</span></div>
+    <button class="new-chat" type="button" (click)="startNewConversation()"><span aria-hidden="true">＋</span> New chat</button>
+    <div class="sidebar-label">HISTORY</div>
+    <button class="recent-item" type="button" *ngFor="let conversation of conversationHistory; trackBy: trackConversation"
+      [class.active]="conversation.id === activeConversationId"
+      [attr.aria-current]="conversation.id === activeConversationId ? 'page' : null"
+      (click)="selectConversation(conversation)">
+      <span class="recent-icon" aria-hidden="true">◷</span><span class="recent-title">{{ conversation.title }}</span>
+      <span class="recent-time" *ngIf="conversation.updatedAt">{{ conversation.updatedAt }}</span>
+    </button>
+    <div class="history-empty" *ngIf="!conversationHistory.length">Your conversations will appear here.</div>
+    <div class="sidebar-bottom"><span class="avatar">L</span><span class="profile"><strong>Looloo</strong><small>Workspace</small></span><span class="more" aria-hidden="true">···</span></div>
+  </aside>
+
+  <main class="main-panel">
+    <header class="topbar"><div class="mobile-brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z"/></svg></span>{{ title }}</div><div class="topbar-context"><span class="status-dot"></span>{{ subtitle }}</div><button class="icon-button" type="button" aria-label="More options">···</button></header>
+
+    <div class="conversation" aria-live="polite" aria-relevant="additions text">
+      <ng-container *ngIf="messages.length; else welcome">
+        <div class="message-list">
+          <article class="message" *ngFor="let message of messages; trackBy: trackMessage" [class.user-message]="message.role === 'user'" [class.assistant-message]="message.role === 'assistant'">
+            <span class="message-avatar" *ngIf="message.role === 'assistant'" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z"/></svg></span>
+            <div class="message-content"><div class="message-meta" *ngIf="message.role === 'assistant'"><strong>{{ message.author || title }}</strong><span *ngIf="message.time">{{ message.time }}</span></div><p>{{ message.content }}</p></div>
+          </article>
+        </div>
+      </ng-container>
+      <ng-template #welcome>
+        <div class="welcome">
+          <div class="welcome-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z"/></svg></div>
+          <p class="eyebrow">YOUR TRAVEL SIDEKICK</p><h1>{{ welcomeTitle }}</h1><p class="welcome-copy">{{ welcomeDescription }}</p>
+          <div class="suggestions" *ngIf="suggestions.length"><button class="suggestion" type="button" *ngFor="let suggestion of suggestions; trackBy: trackSuggestion" (click)="chooseSuggestion(suggestion)" [disabled]="disabled"><span class="suggestion-icon" aria-hidden="true"><ng-container [ngSwitch]="suggestion.icon"><svg *ngSwitchCase="'search'" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 4.2 4.2"/></svg><svg *ngSwitchCase="'lightbulb'" viewBox="0 0 24 24"><path d="M9 18h6m-5 3h4m-2-19a7 7 0 0 0-4.5 12.4c.8.7 1.3 1.5 1.5 2.6h6c.2-1.1.7-1.9 1.5-2.6A7 7 0 0 0 12 2Z"/></svg><svg *ngSwitchCase="'chart'" viewBox="0 0 24 24"><path d="M4 19V5m0 14h16M8 15l3-4 3 2 5-7"/></svg><svg *ngSwitchDefault viewBox="0 0 24 24"><path d="M12 2.8 14.6 9.4 21.2 12l-6.6 2.6L12 21.2l-2.6-6.6L2.8 12l6.6-2.6L12 2.8Z"/></svg></ng-container></span><span class="suggestion-text"><strong>{{ suggestion.title }}</strong><small>{{ suggestion.description || suggestion.prompt }}</small></span><span class="suggestion-arrow" aria-hidden="true">↗</span></button></div>
+        </div>
+      </ng-template>
+    </div>
+
+    <footer class="composer-area"><form class="composer" (ngSubmit)="submit()"><textarea name="prompt" [(ngModel)]="draft" [placeholder]="placeholder" [disabled]="disabled" rows="1" (keydown.enter)="$event.preventDefault(); submit()" aria-label="Message the assistant"></textarea><div class="composer-tools"><span class="composer-hint">AI can make mistakes. Check important info.</span><button class="send-button" type="submit" [disabled]="disabled || !draft.trim()" aria-label="Send message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></div></form><div class="powered">Powered by <strong>{{ title }}</strong></div></footer>
+  </main>
+</section>

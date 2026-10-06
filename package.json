@@ -1,0 +1,23 @@
+{
+  "name": "@looloo/assistant",
+  "version": "0.1.0",
+  "description": "Reusable Angular AI assistant chat window for Looloo applications.",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "@angular/forms": "^21.0.0",
+    "rxjs": "^7.8.0"
+  },
+  "dependencies": {
+    "tslib": "^2.8.0"
+  },
+  "devDependencies": {
+    "@angular/compiler-cli": "^21.0.0",
+    "ng-packagr": "^21.0.0",
+    "typescript": "~5.9.0"
+  },
+  "scripts": {
+    "build": "ng-packagr -p ng-package.json"
+  }
+}
