@@ -27,7 +27,7 @@ export class ChatWindowComponent {
   @Input() placeholder = 'Ask anything…';
   @Input() disabled = false;
   @Input() showSidebar = true;
-  @Input() welcomeTitle = 'Where would you like to go?';
+  @Input() welcomeTitle = 'Where would you like to come?';
   @Input() welcomeDescription = 'Ask me anything, or choose a suggestion to get started.';
 
   @Output() readonly sendMessage = new EventEmitter<string>();
